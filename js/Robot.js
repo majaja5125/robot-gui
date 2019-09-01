@@ -7,14 +7,15 @@ define((require, exports, module) => {
   }
   const maxAngleVelocity = 90.0 / (180.0 * Math.PI) / 1000.0
   const geo = [
-    [2.5 + 2.3, 0, 7.3],
-    [0, 0, 13.0],
-    [1, 0, 2],
-    [12.6, 0, 0],
-    [3.6, 0, 0],
+    [1.5, 0, 5.25],
+    [0, 0, 7.7],
+    [1, 0, 1.5],
+    [7.05, 0, 0],
+    [1.1, 0, 0],
     [0, 0, 0],
   ]
   const defaultRobotState = {
+    robotJoint: 5,
     target: {
       position: {
         x: 10,
@@ -28,12 +29,12 @@ define((require, exports, module) => {
       },
     },
     angles: {
-      A0: 0,
       A1: 0,
       A2: 0,
       A3: 0,
       A4: 0,
-      A5: 0,
+      A5: -90 / 180 * Math.PI,
+      A6: 0,
     },
     jointOutOfBound: [false, false, false, false, false, false],
     maxAngleVelocities: {
@@ -45,12 +46,12 @@ define((require, exports, module) => {
       J5: maxAngleVelocity,
     },
     jointLimits: {
-      J0: [-190 / 180 * Math.PI, 190 / 180 * Math.PI],
-      J1: [-90 / 180 * Math.PI, 90 / 180 * Math.PI],
-      J2: [-135 / 180 * Math.PI, 45 / 180 * Math.PI],
-      J3: [-90 / 180 * Math.PI, 75 / 180 * Math.PI],
-      J4: [-139 / 180 * Math.PI, 90 / 180 * Math.PI],
-      J5: [-188 / 180 * Math.PI, 181 / 180 * Math.PI],
+      J0: [-180 / 180 * Math.PI, 180 / 180 * Math.PI],
+      J1: [-135 / 180 * Math.PI, 100 / 180 * Math.PI],
+      J2: [-80  / 180 * Math.PI, 190 / 180 * Math.PI],
+      J3: [-200 / 180 * Math.PI, 200 / 180 * Math.PI],
+      J4: [-130 / 180 * Math.PI, 130 / 180 * Math.PI],
+      J5: [-360 / 180 * Math.PI, 360 / 180 * Math.PI],
     },
     configuration: [false, false, false],
     geometry: {
@@ -136,33 +137,34 @@ define((require, exports, module) => {
       },
     }, {
       angles: {
-        A0: angles[0],
-        A1: angles[1],
-        A2: angles[2],
-        A3: angles[3],
-        A4: angles[4],
-        A5: angles[5],
+        A1: angles[0],
+        A2: angles[1],
+        A3: angles[2],
+        A4: angles[3],
+        A5: angles[4],
+        A6: angles[5],
       },
     }, {
       jointOutOfBound: [...outOfBounds],
-    })
+    },{robotJoint:2})
   })
 
   robotStore.action('ROBOT_CHANGE_ANGLES', (state, angles) => {
     const TCPpose = []
     IK.calculateTCP(
-      angles.A0,
-      angles.A1,
-      angles.A2,
-      angles.A3,
-      angles.A4,
-      angles.A5,
+       angles.A1,
+      -angles.A2,
+      -angles.A3,
+       angles.A4,
+      -angles.A5,
+      -angles.A6,
       TCPpose,
     )
-
     // IK.calculateAngles(TCPpose[0], TCPpose[1], TCPpose[2], TCPpose[3], TCPpose[4], TCPpose[5], angles)
 
-    return Object.assign({}, state, {
+    return Object.assign({}, state,
+    { robotJoint :3
+    }, {
       target: {
         position: {
           x: TCPpose[0],
@@ -177,12 +179,12 @@ define((require, exports, module) => {
       },
     }, {
       angles: {
-        A0: angles.A0,
         A1: angles.A1,
         A2: angles.A2,
         A3: angles.A3,
         A4: angles.A4,
         A5: angles.A5,
+        A6: angles.A6,
       },
     })
     // return Object.assign({}, state, {
@@ -200,12 +202,12 @@ define((require, exports, module) => {
     //   },
     // }, {
     //   angles: {
-    //     A0: angles[0],
-    //     A1: angles[1],
-    //     A2: angles[2],
-    //     A3: angles[3],
-    //     A4: angles[4],
-    //     A5: angles[5],
+    //     A1: angles[0],
+    //     A2: angles[1],
+    //     A3: angles[2],
+    //     A4: angles[3],
+    //     A5: angles[4],
+    //     A6: angles[5],
     //   },
     // })
     // { todo
@@ -222,12 +224,12 @@ define((require, exports, module) => {
     } = calculateAngles(state.jointLimits, state.target.position, state.target.rotation, state.configuration)
     return Object.assign({}, state, {
       angles: {
-        A0: angles[0],
-        A1: angles[1],
-        A2: angles[2],
-        A3: angles[3],
-        A4: angles[4],
-        A5: angles[5],
+        A1: angles[0],
+        A2: angles[1],
+        A3: angles[2],
+        A4: angles[3],
+        A5: angles[4],
+        A6: angles[5],
       },
     }, {
       jointOutOfBound: [...outOfBounds],
@@ -281,12 +283,12 @@ define((require, exports, module) => {
     } = calculateAngles(state.jointLimits, state.target.position, state.target.rotation, data)
     return Object.assign({}, state, {
       angles: {
-        A0: angles[0],
-        A1: angles[1],
-        A2: angles[2],
-        A3: angles[3],
-        A4: angles[4],
-        A5: angles[5],
+        A1: angles[0],
+        A2: angles[1],
+        A3: angles[2],
+        A4: angles[3],
+        A5: angles[4],
+        A6: angles[5],
       },
       configuration: [...data],
       jointOutOfBound: [...outOfBounds],

@@ -278,11 +278,11 @@ define((require, exports, module) => {
 
 
       angles[0] = R[0]
-      angles[1] = R[1]
-      angles[2] = R[2]
+      angles[1] = -R[1]
+      angles[2] = -R[2]
       angles[3] = R[3]
-      angles[4] = R[4]
-      angles[5] = R[5]
+      angles[4] = -R[4]
+      angles[5] = -R[5]
     }
 
     calculateTCP(R0, R1, R2, R3, R4, R5, jointsResult) {

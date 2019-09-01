@@ -115,12 +115,12 @@ define((require, exports, module) => {
       const fun = {
         resetTargetAngles: () => {
           Robot.dispatch('ROBOT_CHANGE_ANGLES', {
-            A0: 0,
             A1: 0,
             A2: 0,
             A3: 0,
             A4: 0,
-            A5: 0,
+            A5: -90 /180 * Math.PI,
+            A6: 0,
           })
         },
       }

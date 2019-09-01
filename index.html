@@ -26,6 +26,12 @@
 
 <body>
   <!-- three.js container -->
+  <!-- <input type="text" style="display: none;" value="" id="clipboard"> -->
+  <input type="text" style="width: 400px;" value="" id="clipboard">
+  <button class="button" onclick="
+  var joints = document.getElementById('clipboard')
+  joints.select(); 
+  document.execCommand('copy');">copy</button>
   <div id="container"></div>
 
   <script type="text/javascript">
